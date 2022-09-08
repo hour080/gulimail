@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: gulimail-coupon #将微服务注册到注册中心中，需要配置服务名称
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1021
+    url: jdbc:mysql://192.168.205.150:3306/gulimail_sms?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848 #配置nacos注册中心的地址，在配置之前需要使用startup.cmd命令来启动nacos注册中心服务器的地址
+
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml   #classpath*表示不止扫描自己的类路径，还扫描引用的其他依赖的jar包中的类路径
+  global-config:
+    db-config:
+      id-type: auto #设置主键自增
+server:
+  port: 7000

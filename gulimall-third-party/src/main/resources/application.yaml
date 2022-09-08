@@ -1,0 +1,16 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848  #这里是配置注册中心的地址，而bootstrap.properties中配置的是配置中心的地址
+  application:
+    name: gulimall-third-party
+server:
+  port: 30000
+alibaba:
+  cloud:
+    access-key: LTAI5t9MnKE3KDtkNkE8pfH6
+    secret-key: Ik4rAUfwNaVINogmqwzNwhNRg4PeWk
+    oss:
+      endpoint: oss-cn-beijing.aliyuncs.com
+      bucket: gulimail-hourui

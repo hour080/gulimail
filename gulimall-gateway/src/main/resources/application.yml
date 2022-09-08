@@ -1,0 +1,35 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: test_route
+          uri: https://www.baidu.com
+          predicates:
+            - Query=url,baidu
+        - id: qq_route
+          uri: https://www.qq.com
+          predicates:
+            - Query=url,qq
+        #精确路径的路由要放在上面，否则会被其他admin_route路由所匹配
+        - id: product_route
+          uri: lb://gulimall-product
+          predicates:
+            - Path=/api/product/**
+          filters:
+            - RewritePath=/api/?(?<segment>.*), /$\{segment}
+        - id: third_party_route
+          uri: lb://gulimall-third-party
+          predicates:
+            - Path=/api/thirdparty/**
+          filters:
+            - RewritePath=/api/thirdparty/?(?<segment>.*), /$\{segment}
+        - id: admin_route
+          uri: lb://renren-fast   #负载均衡到指定的服务 renren-fast是服务名，lb代表负载均衡
+          predicates:
+            - Path=/api/**
+          filters:  #路径重写
+            - RewritePath=/api/?(?<segment>.*), /renren-fast/$\{segment}
+
+#  前端项目发来的请求都加上/api
+# http://localhost:88/api/captcha.jpg    lb://renren-fast/api/captcha.jpg=>http://localhost:8080/api/captcha.jpg
+# 但是真实的路径是localhost:8080/renren-fast/captcha.jpg

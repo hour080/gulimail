@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: gulimall-product
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1021
+    url: jdbc:mysql://192.168.205.150:3306/gulimail_pms?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml   #classpath*表示不止扫描自己的类路径，还扫描引用的其他依赖的jar包中的类路径
+  global-config:
+    db-config:
+      id-type: auto #设置主键自增
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+#      logic-delete-field: showStatus #全局逻辑删除的实体属性名
+server:
+  port: 10000
+logging:
+  level:
+    com.atguigu.gulimail: debug #这样会打印dao里面的sql日志，sql语句只会在debug下才会打印
