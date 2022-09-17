@@ -1,14 +1,16 @@
 package com.atguigu.gulimail.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import com.atguigu.gulimail.product.entity.BrandEntity;
+import com.atguigu.gulimail.product.vo.BrandVo;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimail.product.entity.CategoryBrandRelationEntity;
 import com.atguigu.gulimail.product.service.CategoryBrandRelationService;
@@ -19,7 +21,7 @@ import com.atguigu.common.utils.R;
 
 /**
  * 品牌分类关联
- *
+ * 1.编写某一个指定品牌id下的所有分类(id,name)
  * @author hourui
  * @email hourui@gmail.com
  * @date 2022-08-24 11:47:05
@@ -41,6 +43,36 @@ public class CategoryBrandRelationController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 获取当前分类关联的所有品牌
+     *
+     * @param catId
+     * @return
+     */
+    @GetMapping("/brands/list")
+    public R relationBrandsList(@RequestParam(value = "catId", required = true) Long catId){
+        //返回List<BrandEntity>方便复用，这样其他服务可以调用该方法
+        List<BrandEntity> vos = categoryBrandRelationService.getBrandsByCatId(catId);
+        List<BrandVo> collect = vos.stream().map(item -> {
+            BrandVo brandVo = new BrandVo();
+            brandVo.setBrandId(item.getBrandId());
+            brandVo.setBrandName(item.getName());
+            return brandVo;
+        }).collect(Collectors.toList());
+        return R.ok().put("data", collect);
+    }
+    /**
+     * 获取指定品牌关联的所有分类（id,name）
+     * @param brandId 指定品牌id
+     * @return
+     */
+//    @RequestMapping(method = RequestMethod.GET, value = "/catelog/list")
+    @GetMapping("/catelog/list")
+    public R cateloglist(@RequestParam("brandId") Long brandId){
+        List<CategoryBrandRelationEntity> data = categoryBrandRelationService.list(
+                new QueryWrapper<CategoryBrandRelationEntity>().eq("brand_id", brandId));
+        return R.ok().put("data", data);
+    }
 
     /**
      * 信息
@@ -54,13 +86,14 @@ public class CategoryBrandRelationController {
     }
 
     /**
-     * 保存
+     * post请求，传递来的数据包含品牌id和分类id
+     * 一般的方法只会将品牌id和分类id保存到数据库
+     * 将品牌id,品牌name以及分类id和分类name保存到数据库中
      */
-    @RequestMapping("/save")
+    @PostMapping("/save")
     //@RequiresPermissions("product:categorybrandrelation:save")
     public R save(@RequestBody CategoryBrandRelationEntity categoryBrandRelation){
-		categoryBrandRelationService.save(categoryBrandRelation);
-
+		categoryBrandRelationService.saveDetail(categoryBrandRelation);
         return R.ok();
     }
 

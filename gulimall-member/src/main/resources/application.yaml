@@ -5,7 +5,7 @@ spring:
     password: 1021
     url: jdbc:mysql://192.168.205.150:3306/gulimail_ums?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
   application:
-    name: gulimail-member
+    name: gulimall-member
   cloud:
     nacos:
       discovery:

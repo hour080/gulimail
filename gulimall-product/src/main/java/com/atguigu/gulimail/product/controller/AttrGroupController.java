@@ -1,21 +1,23 @@
 package com.atguigu.gulimail.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.atguigu.gulimail.product.entity.AttrEntity;
+import com.atguigu.gulimail.product.service.AttrAttrgroupRelationService;
+import com.atguigu.gulimail.product.service.AttrService;
 import com.atguigu.gulimail.product.service.CategoryService;
+import com.atguigu.gulimail.product.vo.AttrGroupRelationVo;
+import com.atguigu.gulimail.product.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.atguigu.gulimail.product.entity.AttrGroupEntity;
 import com.atguigu.gulimail.product.service.AttrGroupService;
 import com.atguigu.common.utils.PageUtils;
 import com.atguigu.common.utils.R;
-
+import org.w3c.dom.Attr;
 
 
 /**
@@ -34,6 +36,24 @@ public class AttrGroupController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private AttrService attrService;
+
+    @Autowired
+    private AttrAttrgroupRelationService attrAttrgroupRelationService;
+
+    @PostMapping("/attr/relation")
+    public R addRelation(@RequestBody List<AttrGroupRelationVo> vos){
+        attrAttrgroupRelationService.saveBatch(vos);
+        return R.ok();
+    }
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId") Long catelogId){
+        //1.查出当前分类下的所有属性分组
+        //2.查出每个属性分组关联的所有属性
+        List<AttrGroupWithAttrsVo> vos = attrGroupService.getAttrGroupWithAttrsByCatelogId(catelogId);
+        return R.ok().put("data", vos);
+    }
     /**
      * 列表
      */
@@ -46,6 +66,37 @@ public class AttrGroupController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 获取指定属性分组下的所有属性(基本属性，销售属性没有属性分组)
+     * @param attrgroupId
+     * @return
+     */
+    @GetMapping("/{attrgroupId}/attr/relation")
+    public R attrRelation(@PathVariable("attrgroupId") Long attrgroupId){
+        List<AttrEntity> data = attrService.getRelationAttr(attrgroupId);
+        return R.ok().put("data", data);
+    }
+
+    /**
+     * 获取可以关联当前属性分组的属性信息，也就是没有关联属性分组的属性
+     * 因为一开始获得指定属性分组所属的分类id下所有分组的id
+     * 然后在中间表中找到所有分组id对应的属性id
+     * 最后在属性表中找到属于当前分类，并排除这些属性id的属性
+     * @param attrgroupId 属性分组id
+     * @param params 分页参数信息，例如page当前页码，limit每一页显示的最大记录数
+     * @return
+     */
+    @GetMapping("/{attrgroupId}/noattr/relation")
+    public R attrNoRelation(@PathVariable("attrgroupId") Long attrgroupId,
+                            @RequestParam Map<String, Object> params){
+        PageUtils page = attrService.getNoRelationAttr(params, attrgroupId);
+        return R.ok().put("page", page);
+    }
+    @PostMapping("/attr/relation/delete")
+    public R deleteRelation(@RequestBody AttrGroupRelationVo[] vos){
+        attrService.deleteRelation(vos);
+        return R.ok();
+    }
 
     /**
      * 信息

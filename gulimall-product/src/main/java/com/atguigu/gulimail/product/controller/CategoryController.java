@@ -76,13 +76,13 @@ public class CategoryController {
     }
 
     /**
-     * 修改
+     * 修改分类表的完整信息
+     * 这里由于分类表和品牌表的中间表中存储了分类的name,因此如果修改了分类表中name字段，中间表也要进行修改
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:category:update")
     public R update(@RequestBody CategoryEntity category){
-		categoryService.updateById(category);
-
+		categoryService.updateCascade(category);
         return R.ok();
     }
 

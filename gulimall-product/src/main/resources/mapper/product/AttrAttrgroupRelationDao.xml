@@ -10,6 +10,15 @@
         <result property="attrGroupId" column="attr_group_id"/>
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
+<!--    where "attr_id" = 1L and "attr_group_id" = 1L or "attr_id" = 2L and "attr_group_id" = 3
+    注意这里分隔符OR前后都要加上空格
+-->
+    <delete id="deleteRelation">
+        delete from pms_attr_attrgroup_relation where
+        <foreach collection="entities" item="item" separator=" OR ">
+            (attr_id = #{item.attrId} and attr_group_id = #{item.attrGroupId})
+        </foreach>
+    </delete>
 
 
 </mapper>

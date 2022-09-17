@@ -1,5 +1,8 @@
 package com.atguigu.gulimail.product.service.impl;
 
+import com.atguigu.gulimail.product.dao.CategoryBrandRelationDao;
+import com.atguigu.gulimail.product.service.CategoryBrandRelationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -16,11 +19,15 @@ import com.atguigu.common.utils.Query;
 import com.atguigu.gulimail.product.dao.CategoryDao;
 import com.atguigu.gulimail.product.entity.CategoryEntity;
 import com.atguigu.gulimail.product.service.CategoryService;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 
 @Service("categoryService")
 public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity> implements CategoryService {
 
+    @Autowired
+    CategoryBrandRelationService categoryBrandRelationService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CategoryEntity> page = this.page(
@@ -74,6 +81,17 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
             byId = this.getById(byId.getParentCid());
         }
         return paths.toArray(new Long[paths.size()]);
+    }
+
+    /**
+     * 级联更新所有关联的数据
+     * @param category
+     */
+    @Transactional //开启事务涉及到多张表的操作，需要在配置类中开启事务注解@EnableTransactionManagement
+    @Override
+    public void updateCascade(CategoryEntity category) {
+        this.updateById(category);
+        categoryBrandRelationService.updateCategory(category.getCatId(), category.getName());
     }
 
     /**

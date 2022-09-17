@@ -53,12 +53,13 @@ public class AttrEntity implements Serializable {
 	 */
 	private Long enable;
 	/**
-	 * 所属分类
+	 * 所属三级分类id
 	 */
 	private Long catelogId;
 	/**
 	 * 快速展示【是否展示在介绍上；0-否 1-是】，在sku中仍然可以调整
 	 */
 	private Integer showDesc;
+
 
 }

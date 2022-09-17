@@ -83,12 +83,13 @@ public class BrandController {
     }
 
     /**
-     * 修改分类的完整信息
+     * 修改品牌的完整信息
+     * 这里由于分类表和品牌表的中间表中存储了分类的name,因此如果修改了品牌表中name字段，中间表也要进行修改
      */
     @RequestMapping("/update")
     //@RequiresPermissions("product:brand:update")
     public R update(@Validated({UpdateGroup.class}) @RequestBody BrandEntity brand){
-		brandService.updateById(brand);
+		brandService.updateDetail(brand);
         return R.ok();
     }
     /**

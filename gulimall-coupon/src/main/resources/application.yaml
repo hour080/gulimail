@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gulimail-coupon #将微服务注册到注册中心中，需要配置服务名称
+    name: gulimall-coupon #将微服务注册到注册中心中，需要配置服务名称
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
