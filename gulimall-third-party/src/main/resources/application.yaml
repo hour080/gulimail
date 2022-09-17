@@ -9,8 +9,8 @@ server:
   port: 30000
 alibaba:
   cloud:
-    access-key: #你的alibaba云存储access-key
-    secret-key: #你的alibaba云存储secret-key
+    access-key: #alibaba云存储access-key
+    secret-key: #alibaba云存储secret-key
     oss:
-      endpoint: #你的alibaba云存储端点信息
-      bucket: #存储空间名称
+      endpoint: #alibaba云存储端点信息
+      bucket: #alibaba存储空间名称
