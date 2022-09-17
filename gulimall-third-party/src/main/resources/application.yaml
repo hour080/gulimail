@@ -9,8 +9,8 @@ server:
   port: 30000
 alibaba:
   cloud:
-    access-key: LTAI5t9MnKE3KDtkNkE8pfH6
-    secret-key: Ik4rAUfwNaVINogmqwzNwhNRg4PeWk
+    access-key: #你的alibaba云存储access-key
+    secret-key: #你的alibaba云存储secret-key
     oss:
-      endpoint: oss-cn-beijing.aliyuncs.com
-      bucket: gulimail-hourui
+      endpoint: #你的alibaba云存储端点信息
+      bucket: #存储空间名称
