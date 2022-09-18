@@ -4,6 +4,15 @@ spring:
     username: root
     password: 1021
     url: jdbc:mysql://192.168.205.150:3306/gulimail_wms?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+  application:
+    name: gulimall-ware
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
 
 mybatis-plus:
   mapper-locations: classpath:/mapper/**/*.xml   #classpath*表示不止扫描自己的类路径，还扫描引用的其他依赖的jar包中的类路径
@@ -12,3 +21,6 @@ mybatis-plus:
       id-type: auto #设置主键自增
 server:
   port: 11000
+logging:
+  level:
+    com.atguigu.gulimail: debug #默认的日志等级是info

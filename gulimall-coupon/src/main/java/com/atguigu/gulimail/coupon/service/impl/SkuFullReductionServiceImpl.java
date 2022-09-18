@@ -70,8 +70,8 @@ public class SkuFullReductionServiceImpl extends ServiceImpl<SkuFullReductionDao
             entity.setSkuId(skuReductionTo.getSkuId());
             entity.setAddOther(1); //默认叠加其他优惠
             return entity;
-        }).filter(item -> {
             //返回true的保留，返回false的去除
+        }).filter(item -> {
             return item.getMemberPrice().compareTo(BigDecimal.ZERO) == 1;
         }).collect(Collectors.toList());
         memberPriceService.saveBatch(collect);

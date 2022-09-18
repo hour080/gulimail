@@ -19,6 +19,7 @@ import com.atguigu.common.utils.Query;
 import com.atguigu.gulimail.product.dao.ProductAttrValueDao;
 import com.atguigu.gulimail.product.entity.ProductAttrValueEntity;
 import com.atguigu.gulimail.product.service.ProductAttrValueService;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service("productAttrValueService")
@@ -47,6 +48,24 @@ public class ProductAttrValueServiceImpl extends ServiceImpl<ProductAttrValueDao
             attrValueEntity.setQuickShow(attr.getShowDesc()); //是否快速展示
             attrValueEntity.setSpuId(spuId);
             return attrValueEntity;
+        }).collect(Collectors.toList());
+        this.saveBatch(collect);
+    }
+
+    @Override
+    public List<ProductAttrValueEntity> baseAttrListForSpu(Long spuId) {
+        return this.list(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
+    }
+
+    @Transactional
+    @Override
+    public void updateSpuAttr(Long spuId, List<ProductAttrValueEntity> entities) {
+        //1.删除spuId之前对应的所有属性
+        this.baseMapper.delete(new QueryWrapper<ProductAttrValueEntity>().eq("spu_id", spuId));
+        //2.批量插入
+        List<ProductAttrValueEntity> collect = entities.stream().map(item -> {
+            item.setSpuId(spuId);
+            return item;
         }).collect(Collectors.toList());
         this.saveBatch(collect);
     }
